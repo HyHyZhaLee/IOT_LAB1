@@ -13,13 +13,13 @@ while True:
     time.sleep(5)
     print("Publishing...")
     mqtt.publish("button1",random.randint(0,1))
-    time.sleep(0.5)
+    time.sleep(1)
     mqtt.publish("button2",random.randint(0,1))
-    time.sleep(0.5)
+    time.sleep(1)
     mqtt.publish("humidity",random.randint(0,100))
-    time.sleep(0.5)
+    time.sleep(1)
     mqtt.publish("temperature",random.randint(0,100))
-    time.sleep(0.5)
+    time.sleep(1)
     mqtt.publish("light",random.randint(0,100))
     pass
 
