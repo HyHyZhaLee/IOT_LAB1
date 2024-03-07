@@ -12,6 +12,7 @@ model = load_model("keras_Model.h5", compile=False)
 class_names = open("labels.txt", "r").readlines()
 
 # CAMERA can be 0 or 1 based on default camera of your computer
+# camera = cv2.VideoCapture("http://192.168.124.31:6677/videofeed?username=&password=")
 camera = cv2.VideoCapture(0)
 
 while True:
