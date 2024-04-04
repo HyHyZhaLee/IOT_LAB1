@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 public class MainActivity extends AppCompatActivity {
     MQTTHelper mqttHelper;
     TextView txtTemp, txtHumi, txtLight;
-    LabeledSwitch switch1stfloor, switch2ndfloor, switchAllLight, switchstairlight, switchDoor,switchSecurity;
+    LabeledSwitch switch1stfloor, switch2ndfloor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,18 +39,14 @@ public class MainActivity extends AppCompatActivity {
         txtLight = findViewById(R.id.txtLight);
         switch1stfloor = findViewById(R.id.switch1stfloor);
         switch2ndfloor = findViewById(R.id.switch2ndfloor);
-        switchAllLight = findViewById(R.id.switchAllLight);
-        switchstairlight = findViewById(R.id.switchstairlight);
-        switchDoor = findViewById(R.id.switchDoor);
-        switchSecurity = findViewById(R.id.switchSecurity);
 
         switch1stfloor.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
                 if(isOn == true){
-                    sendDataMQTT("lygiahuy05022002/feeds/relay1", "1");
+                    sendDataMQTT("AI_ProjectHGL/feeds/button1", "1");
                 }
-                else sendDataMQTT("lygiahuy05022002/feeds/relay1", "0");
+                else sendDataMQTT("AI_ProjectHGL/feeds/button1", "0");
             }
         });
 
@@ -58,51 +54,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
                 if(isOn == true){
-                    sendDataMQTT("lygiahuy05022002/feeds/relay2", "1");
+                    sendDataMQTT("AI_ProjectHGL/feeds/button2", "1");
                 }
-                else sendDataMQTT("lygiahuy05022002/feeds/relay2", "0");
+                else sendDataMQTT("AI_ProjectHGL/feeds/button2", "0");
             }
         });
 
-        switchstairlight.setOnToggledListener(new OnToggledListener() {
-            @Override
-            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-                if(isOn == true){
-                    sendDataMQTT("lygiahuy05022002/feeds/relay3", "1");
-                }
-                else sendDataMQTT("lygiahuy05022002/feeds/relay3", "0");
-            }
-        });
-
-        switchDoor.setOnToggledListener(new OnToggledListener() {
-            @Override
-            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-                if(isOn == true){
-                    sendDataMQTT("lygiahuy05022002/feeds/doorbutton", "1");
-                }
-                else sendDataMQTT("lygiahuy05022002/feeds/doorbutton", "0");
-            }
-        });
-
-        switchSecurity.setOnToggledListener(new OnToggledListener() {
-            @Override
-            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-                if(isOn == true){
-                    sendDataMQTT("lygiahuy05022002/feeds/security", "1");
-                }
-                else sendDataMQTT("lygiahuy05022002/feeds/security", "0");
-            }
-        });
-
-        switchAllLight.setOnToggledListener(new OnToggledListener() {
-            @Override
-            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-                if(isOn == true){
-                    sendDataMQTT("lygiahuy05022002/feeds/ledbutton", "1");
-                }
-                else sendDataMQTT("lygiahuy05022002/feeds/ledbutton", "0");
-            }
-        });
         startMQTT();
     }
 
@@ -138,30 +95,15 @@ public class MainActivity extends AppCompatActivity {
                 if(topic.contains("temp")) txtTemp.setText(message.toString()+ "°C");
                 else if(topic.contains("humi")) txtHumi.setText(message.toString() + "%");
                 else if(topic.contains("light")) txtLight.setText(message.toString() + "%");
-                else if(topic.contains("doorbutton")) {
-                    if(message.toString().equals("1")) switchDoor.setOn(true);
-                    else switchDoor.setOn(false);
-                }
-                else if(topic.contains("ledbutton")) {
-                    if(message.toString().equals("1")) switchAllLight.setOn(true);
-                    else switchAllLight.setOn(false);
-                }
-                else if(topic.contains("relay1")) {
+                else if(topic.contains("button1")) {
                     if(message.toString().equals("1")) switch1stfloor.setOn(true);
                     else switch1stfloor.setOn(false);
                 }
-                else if(topic.contains("relay2")) {
+                else if(topic.contains("button2")) {
                     if(message.toString().equals("1")) switch2ndfloor.setOn(true);
                     else switch2ndfloor.setOn(false);
                 }
-                else if(topic.contains("relay3")) {
-                    if(message.toString().equals("1")) switchstairlight.setOn(true);
-                    else switchstairlight.setOn(false);
-                }
-                else if(topic.contains("security")) {
-                    if(message.toString().equals("1")) switchSecurity.setOn(true);
-                    else switchSecurity.setOn(false);
-                }
+
             }
 
             @Override
