@@ -1,24 +1,24 @@
 from adafruit_mqtt import *
-import random
-import time
+from uart import *
 
 feed_ids = ["button1", 	"button2", "humidity", "light", "temperature"]
 username = "AI_ProjectHGL"
 password = "aio_" + "CHRX08OBUahjbuHBFWdtmdIVwibh"
 
 mqtt = Adafruit_MQTT(username, password, feed_ids)
+uart = Uart(115200, None, True)
 
 while True:
-    time.sleep(5)
-    print("Publishing...")
-    mqtt.publish("button1",random.randint(0,1))
-    time.sleep(1)
-    mqtt.publish("button2",random.randint(0,1))
-    time.sleep(1)
-    mqtt.publish("humidity",random.randint(0,100))
-    time.sleep(1)
-    mqtt.publish("temperature",random.randint(0,100))
-    time.sleep(1)
-    mqtt.publish("light",random.randint(0,100))
-    pass
+    uart_data = uart.readSerial()
+    if uart_data is not None:
+        for i in range(len(uart_data)):
+            if (uart_data[i] == 'T'):
+                temperature = uart_data[i + 1]
+                mqtt.publish("temperature", temperature)
+            elif (uart_data[i] == 'H'):
+                humidity = uart_data[i + 1]
+                mqtt.publish("humidity", humidity)
+            elif (uart_data[i] == 'L'):
+                light = uart_data[i + 1]
+                mqtt.publish("light", light)
 
