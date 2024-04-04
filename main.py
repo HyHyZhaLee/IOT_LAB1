@@ -1,7 +1,6 @@
 from adafruit_mqtt import *
 import random
 import time
-import serial.tools.list_ports
 
 feed_ids = ["button1", 	"button2", "humidity", "light", "temperature"]
 username = "AI_ProjectHGL"

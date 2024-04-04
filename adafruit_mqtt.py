@@ -2,10 +2,24 @@ import sys
 from Adafruit_IO import MQTTClient
 
 class Adafruit_MQTT:
-    AIO_FEED_IDs = ["button1", 	"button2"]
-    AIO_USERNAME = "NPNLab_"
-    AIO_KEY = "aio_"
+
+    AIO_FEED_IDs = []
+    AIO_USERNAME = ""
+    AIO_KEY = ""
     client = None
+
+    def __init__(self, username, key, feed_ids):
+        self.AIO_FEED_IDs = feed_ids
+        self.AIO_USERNAME = username
+        self.AIO_KEY = key
+
+        self.client = MQTTClient(self.AIO_USERNAME , self.AIO_KEY)
+        self.client.on_connect = self.connected
+        self.client.on_disconnect = self.disconnected
+        self.client.on_message = self.message
+        self.client.on_subscribe = self.subscribe
+        self.client.connect()
+        self.client.loop_background()
 
     def connected(self, client):
         print("Connected ...")
@@ -25,16 +39,5 @@ class Adafruit_MQTT:
     def publish(self, topic, payload):
         self.client.publish(topic, payload)
 
-    def __init__(self, username, key, feed_ids):
-        self.AIO_FEED_IDs = feed_ids
-        self.AIO_USERNAME = username
-        self.AIO_KEY = key
 
-        self.client = MQTTClient(self.AIO_USERNAME , self.AIO_KEY)
-        self.client.on_connect = self.connected
-        self.client.on_disconnect = self.disconnected
-        self.client.on_message = self.message
-        self.client.on_subscribe = self.subscribe
-        self.client.connect()
-        self.client.loop_background()
 
