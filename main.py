@@ -10,15 +10,17 @@ uart = Uart(115200, None, True)
 
 while True:
     uart_data = uart.readSerial()
-    if uart_data is not None:
-        for i in range(len(uart_data)):
-            if (uart_data[i] == 'T'):
-                temperature = uart_data[i + 1]
+    if len(uart_data) > 0:
+        for data in uart_data:
+            if (data[1] == 'T'):
+                temperature = data[2]
                 mqtt.publish("temperature", temperature)
-            elif (uart_data[i] == 'H'):
-                humidity = uart_data[i + 1]
+            elif (data[1] == 'H'):
+                humidity = data[2]
                 mqtt.publish("humidity", humidity)
-            elif (uart_data[i] == 'L'):
-                light = uart_data[i + 1]
+            elif (data[1] == 'L'):
+                light = data[2]
                 mqtt.publish("light", light)
+        uart.clearData()
+
 

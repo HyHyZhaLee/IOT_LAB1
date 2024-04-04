@@ -4,6 +4,7 @@ import serial.tools.list_ports
 class Uart:
     def __init__(self, baudrate=115200, fixedcomport=None, flag_simulation=False):
         self.flag_simulation = flag_simulation
+        self.buffer = []
         if fixedcomport is None:
             self.portname = self.getPort()
         else:
@@ -33,24 +34,35 @@ class Uart:
         return commPort
 
     def processData(self, data):
-        segments = data.split("##")
-        processed_data = []
-        for segment in segments:
-            if segment:  # Check if segment is not empty
-                clean_segment = segment.replace("!", "").replace("#", "")
-                splitData = clean_segment.split(":")
-        return splitData
+        data = data.replace("!", "")
+        data = data.replace("#", "")
+        splitData = data.split(":")
+        self.buffer.append(splitData)
 
     def readSerial(self):
-        mess = self.ser.read_until(b'##').decode("UTF-8")
-        if mess:
-            return self.processData(mess)
-        return None
+        bytesToRead = self.ser.inWaiting()
+        if (bytesToRead > 0):
+            mess = self.ser.read(bytesToRead).decode("UTF-8")
+            while ("#" in mess) and ("!" in mess):
+                start = mess.find("!")
+                end = mess.find("#")
+                self.processData(mess[start:end + 1])
+                if (end == len(mess)):
+                    mess = ""
+                else:
+                    mess = mess[end + 1:]
+        return self.buffer
+
+    def clearData(self):
+        # Assuming you process data elsewhere and know which to remove
+        self.buffer = []  # Resetting the buffer, implement more nuanced clearing as needed
 
 if __name__ == '__main__':
     uart = Uart(115200, None, True)
     while True:
         uart_data = uart.readSerial()
-        if uart_data is not None:
-            print(uart_data)
+        if len(uart_data) > 0 :
+            for data in uart_data:
+                print(data)
+                uart.clearData()
 
