@@ -3,7 +3,7 @@ from uart import *
 
 feed_ids = ["button1", 	"button2", "humidity", "light", "temperature"]
 username = "AI_ProjectHGL"
-password = "aio_" + "CHRX08OBUahjbuHBFWdtmdIVwibh"
+password = "aio_" + "rdVf662waw2mFNqq427hAJLxsDRn"
 
 uart = Uart(115200, None, True)
 
