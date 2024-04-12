@@ -36,6 +36,9 @@ class Adafruit_MQTT:
     def message(self, client , feed_id , payload):
         print("Received: " + payload + " at feed id: " + feed_id)
 
+    def setOnMessageFunction(self, function):
+        self.client.on_message = function
+
     def publish(self, topic, payload):
         self.client.publish(topic, payload)
 

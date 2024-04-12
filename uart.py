@@ -53,6 +53,12 @@ class Uart:
                     mess = mess[end + 1:]
         return self.buffer
 
+    def writeSerial(self, data):
+        try:
+            self.ser.write(data.encode("UTF-8"))
+        except serial.SerialException as e:
+            print(f"Error writing to serial port: {e}")
+
     def clearData(self):
         # Assuming you process data elsewhere and know which to remove
         self.buffer = []  # Resetting the buffer, implement more nuanced clearing as needed

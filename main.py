@@ -5,8 +5,21 @@ feed_ids = ["button1", 	"button2", "humidity", "light", "temperature"]
 username = "AI_ProjectHGL"
 password = "aio_" + "CHRX08OBUahjbuHBFWdtmdIVwibh"
 
-mqtt = Adafruit_MQTT(username, password, feed_ids)
 uart = Uart(115200, None, True)
+
+
+def processSubcribe(client, feed_id, payload):
+    print("Proceesing subcribe with feed id: ", feed_id," + payload: ", payload)
+    if feed_id == "button1":
+        if payload == "1": uart.writeSerial("!1:B:1#")
+        elif payload == "0": uart.writeSerial("!1:B:0#")
+    elif feed_id == "button2":
+        if payload == "1": uart.writeSerial("!2:B:1#")
+        elif payload == "0": uart.writeSerial("!2:B:0#")
+
+
+mqtt = Adafruit_MQTT(username, password, feed_ids)
+mqtt.setOnMessageFunction(processSubcribe)
 
 while True:
     uart_data = uart.readSerial()
